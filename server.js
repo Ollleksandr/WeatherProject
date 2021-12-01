@@ -22,8 +22,8 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/City", (req, res) => {
-    db.collection("City")
+app.get("/Weather", (req, res) => {
+    db.collection("Weather")
         .find()
         .toArray((err, result) => {
             if (err) {
@@ -34,22 +34,22 @@ app.get("/City", (req, res) => {
         });
 });
 
-app.post("/City", (req, res) => {
-    let joke = {
+app.post("/Weather", (req, res) => {
+    let weather = {
         text: req.body.text,
     };
 
-    db.collection("City").insertOne(joke, (err, result) => {
+    db.collection("Weather").insertOne(weather, (err, result) => {
         if (err) {
             console.log(err);
             return res.sendStatus(500);
         }
-        res.status(200).json(joke);
+        res.status(200).json(weather);
     });
 });
 
-app.delete("/City/:id", (req, res) => {
-    db.collection("City").deleteOne({ _id: ObjectID(req.params.id) }, (err, result) => {
+app.delete("/Weather/:id", (req, res) => {
+    db.collection("Weather").deleteOne({ _id: ObjectID(req.params.id) }, (err, result) => {
         if (err) {
             console.log(err);
             return res.sendStatus(500);

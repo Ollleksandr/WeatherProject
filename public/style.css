@@ -1,5 +1,12 @@
 body {
-  background: pink;
+  background-image: url(img/osennyaya-pogoda-774x435.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 div#main-wrapper {
@@ -8,29 +15,35 @@ div#main-wrapper {
 }
 
 input {
-  width: 777px;
-  height: 33px;
-  border-radius: 5;
+  width: 999px;
+  height: 55px;
+  border-radius: 10;
   margin-bottom: 15px;
+  font-size: 25px;
 }
 button {
-  width: 111px;
-  height: 39px;
+  width: 222px;
+  height: 61px;
+  font-size: 25px;
+  font-weight: bold;
 }
 div#howInfo {
   margin: auto;
   width: 888px;
-  height: 111px;
-  background: red;
+  height: 222px;
+  background: rgb(171, 196, 60);
   border-radius: 5px;
+  font-size: 25px;
 }
 div#howInfo > div {
-  height: 55px;
+  height: 150px;
   padding-top: 15px;
 }
 div#howInfo > button {
   /* margin-top: 71px; */
-  color: red;
+  color: rgb(3, 3, 3);
+  width: 99px;
+  height: 35px;
 }
 div.Mini_showInfo {
   width: 150px;

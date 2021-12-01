@@ -1,4 +1,33 @@
 const maindiv = document.querySelector("#main-wrapper");
+const textHolder = document.createElement("div");
+var arr1 = [];
+
+setTimeout(
+    window.addEventListener("load", () => {
+        let long;
+        let lat;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                long = position.coords.longitude;
+                lat = position.coords.latitude;
+                const locationURL = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&lang=ru&appid=5ac5782cf77907b89d71c99feb3ba0ef`;
+                fetch(locationURL)
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then(async (data) => {
+                        // const locationArr = [];
+                        arr1.push(data["name"], data["main"]["temp"], data["weather"][0]["description"]);
+                        // console.log(locationArr);
+                        textHolder.innerHTML = `Город: ${arr1[0]}, температура: ${arr1[1]}, погодные условия: ${arr1[2]};`;
+                        // return locationArr;
+                        return arr1;
+                    });
+            });
+        }
+    }),
+    5000
+);
 
 class weatherView {
     constructor() {
@@ -12,60 +41,60 @@ class weatherView {
         this.showInfo = document.createElement("div");
         this.showInfo.id = "howInfo";
         //add text area in big show block
-        this.textHolder = document.createElement("div");
+        // this.textHolder = document.createElement("div");
         //add save button
         this.saveButton = document.createElement("button");
         this.saveButton.innerHTML = "SAVE";
         //add text area and save button to big show block
-        this.showInfo.append(this.textHolder, this.saveButton);
+        this.showInfo.append(textHolder, this.saveButton);
+        this.Mini_showInfoWRAPPER = document.createElement("div");
     }
 
     // start rendering main view
     initView() {
-        maindiv.append(this.input, this.addButton, this.showInfo);
+        maindiv.append(this.input, this.addButton, this.showInfo, this.Mini_showInfoWRAPPER);
     }
 
-    // show city weather which choose user on big block
     ShowCurrentWeather(text) {
-        // var dataFromInput=this.
-        this.textHolder.innerHTML = `Город: ${text[0]}, температура: ${text[1]}, погодные условия: ${text[2]};`;
+        textHolder.innerHTML = `Город: ${text[0]}, температура: ${text[1]}, погодные условия: ${text[2]};`;
     }
 
-    // showAllCity(bigArr) {
-    //     this.Mini_showInfo.innerHTML = " ";
-    //     for (let i = 0; i < bigArr.length; i++) {
-    //         this.ShowSavedWeather(bigArr[i]);
-    //     }
-    // }
-    // //show small blocks with saved city
-    // ShowSavedWeather(dateFromServer) {
-    //     this.Mini_showInfo = document.createElement("div");
-    //     this.Mini_showInfo.className = "Mini_showInfo";
-    //     this.removeButton = document.createElement("button");
-    //     this.removeButton.id = dateFromServer._id;
-    //     this.removeButton.innerHTML = "&#10006";
-    //     //add data from server
-    //     this.textWrapper = document.createElement("div");
-    //     this.Mini_showInfo.append(this.textWrapper, this.removeButton);
-    //     this.textWrapper.innerHTML = dateFromServer.text;
-    //     document.getElementsByTagName("body")[0].appendChild(this.Mini_showInfo);
-    // }
+    showAllCity(bigArr) {
+        for (let i = 0; i < bigArr.length; i++) {
+            this.ShowSavedWeather(bigArr[i]);
+        }
+    }
+
+    ShowSavedWeather(dateFromServer) {
+        // this.Mini_showInfoWRAPPER.append(this.Mini_showInfo);
+        this.Mini_showInfo = document.createElement("div");
+        this.Mini_showInfo.className = "Mini_showInfo";
+        this.removeButton = document.createElement("button");
+        this.removeButton.id = dateFromServer._id;
+        this.removeButton.innerHTML = "&#10006";
+        this.textWrapper = document.createElement("div");
+        this.Mini_showInfo.append(this.textWrapper, this.removeButton);
+        this.textWrapper.innerHTML = dateFromServer.text;
+        this.Mini_showInfoWRAPPER.append(this.Mini_showInfo);
+        // document.getElementsByTagName("body")[0].appendChild(this.Mini_showInfo);
+    }
 }
 
 class weatherModel {
     constructor() {
-        //my server adress
-        this.url = "http://localhost:3000/City";
+        this.url = "http://localhost:3000/Weather";
     }
 
-    //download weather data from API and add it to arr
     async downloadWeather(URL) {
         try {
             let response = await fetch(URL);
             let data = await response.json();
+            console.log(data);
             this.arr = [];
+
             this.arr.push(data["name"], data["main"]["temp"], data["weather"][0]["description"]);
-            console.log(this.arr);
+
+            return this.arr;
         } catch (err) {
             return err;
         }
@@ -115,37 +144,47 @@ class weatherController {
         this.view = view;
         this.model = model;
         this.getAPIinfo = this.getAPIinfo.bind(this);
-        // this.saveNewCity = this.saveNewCity.bind(this);
-        // this.removeSavedCity = this.removeSavedCity.bind(this);
-        // this.refreshPage = this.refreshPage.bind(this);
+        this.saveNewCity = this.saveNewCity.bind(this);
+        this.removeSavedCity = this.removeSavedCity.bind(this);
+        this.refreshPage = this.refreshPage.bind(this);
     }
 
-    //work with botton
     hendle() {
         this.view.addButton.addEventListener("click", this.getAPIinfo);
         this.view.saveButton.addEventListener("click", this.saveNewCity);
-        // this.view.removeButton.addEventListener("click", this.removeSavedCity);
-        // this.refreshPage();
+
+        this.refreshPage();
     }
 
     // get text from input, add this text in API adress, start download weather data from API and add to big block needed data
     async getAPIinfo() {
         this.Cityname = this.view.input.value;
-        this.jokeUrl = `http://api.openweathermap.org/data/2.5/weather?q=${this.Cityname}&lang=ru&appid=5ac5782cf77907b89d71c99feb3ba0ef`;
-        await this.model.downloadWeather(this.jokeUrl);
-        this.view.ShowCurrentWeather(this.model.arr);
-
-        // .then((result) => result instanceof Error)
-        //     ? console.log(result)
-        //     : this.view.ShowCurrentWeather(this.model.arr);
-        // this.view.ShowCurrentWeather.innerHTML = `Город: ${this.model.arr[0]}, температура: ${this.model.arr[1]}, погодные условия: ${this.model.arr[2]};`;
+        console.log(this.Cityname.length);
+        if (this.Cityname.length > 0) {
+            this.jokeUrl = `http://api.openweathermap.org/data/2.5/weather?q=${this.Cityname}&lang=ru&appid=5ac5782cf77907b89d71c99feb3ba0ef`;
+            await this.model.downloadWeather(this.jokeUrl);
+            this.view.ShowCurrentWeather(this.model.arr);
+            this.view.input.value = " ";
+            this.view.input.placeholder = "Enter next City";
+        } else {
+            console.log("Enter Your City");
+        }
     }
 
     // get arr with needed data, post it to my server and start render mini block with this data
     saveNewCity() {
         let text = this.model.arr;
-        if (text.length > 0) {
+        let text1 = globalThis.arr1;
+        if (typeof text !== "undefined") {
             this.model.addWeatherToServer(text).then((result) => {
+                if (result instanceof Error) return console.log(result);
+
+                this.view.ShowSavedWeather(result);
+                this.view.removeButton.addEventListener("click", this.removeSavedCity);
+                console.log(result);
+            });
+        } else {
+            this.model.addWeatherToServer(text1).then((result) => {
                 if (result instanceof Error) return console.log(result);
 
                 this.view.ShowSavedWeather(result);
@@ -155,24 +194,27 @@ class weatherController {
         }
     }
 
-    // removeSavedCity(e) {
-    //     let id = e.target.id;
-    //     this.model
-    //         .removeCity(id)
-    //         .then((result) => (result instanceof Error ? console.log(result) : this.refreshPage()));
-    // }
+    async removeSavedCity(e) {
+        let id = e.target.id;
+        this.model
+            .removeCity(id)
+            .then((result) => (result instanceof Error ? console.log(result) : this.refreshPage()));
+    }
 
-    // refreshPage() {
-    //     this.model
-    //         .getCityFromMyServer()
-    //         .then((result) => (result instanceof Error ? console.log(result) : this.view.showAllCity(result)));
-    //     this.view.removeButton.addEventListener("click", this.removeSavedCity);
-    // }
+    async refreshPage() {
+        this.view.Mini_showInfoWRAPPER.innerHTML = "";
+        this.model
+            .getCityFromMyServer()
+            .then((result) => (result instanceof Error ? console.log(result) : this.view.showAllCity(result)));
+        setTimeout(() => {
+            this.view.removeButton.addEventListener("click", this.removeSavedCity);
+        }, 300);
+    }
 }
 
 (function init() {
     const view = new weatherView();
-    const model = new weatherModel(view);
+    const model = new weatherModel();
     const controller = new weatherController(view, model);
     view.initView();
     controller.hendle();
