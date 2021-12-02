@@ -1,4 +1,5 @@
 body {
+  overflow-x: hidden;
   background-image: url(img/osennyaya-pogoda-774x435.jpg);
   background-repeat: no-repeat;
   background-position: center center;
@@ -31,7 +32,8 @@ div#howInfo {
   margin: auto;
   width: 888px;
   height: 222px;
-  background: rgb(171, 196, 60);
+  background: rgb(61, 225, 236);
+  opacity: 0.8;
   border-radius: 5px;
   font-size: 25px;
 }
@@ -40,51 +42,37 @@ div#howInfo > div {
   padding-top: 15px;
 }
 div#howInfo > button {
-  /* margin-top: 71px; */
   color: rgb(3, 3, 3);
   width: 99px;
   height: 35px;
 }
+div#Mini_showInfoWRAPPER {
+  padding-left: 190px;
+  padding-right: 190px;
+  width: 100%;
+}
 div.Mini_showInfo {
-  width: 150px;
+  font-size: 21px;
+  width: 430px;
   height: 150px;
-  background: yellow;
+  padding-top: 15px;
+  background: rgb(61, 225, 236);
+  opacity: 0.7;
   border-radius: 5px;
   float: left;
   bottom: 33px;
   margin-top: 33px;
-  margin-right: 33px;
-  margin-left: 28px;
+  margin-right: 103px;
 }
-/* div.Mini_showInfo > button {
-  width: 20px;
-  height: 20px;
-  padding-bottom: 0;
-  float: right;
-  text-decoration: none;
-  display: inline-block;
-  overflow: hidden;
-  border: 2px solid #fe6637;
-  border-radius: 8px;
-  color: #fe6637;
-  transition: 0.2s ease-in-out;
+div.Mini_showInfo > button {
+  background-color: transparent;
+  margin-top: 55px;
+  border: none;
+  width: 35px;
+  height: 31px;
+  padding-top: 0;
 }
-div.Mini_showInfo > button:before {
-  content: "";
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.5)
-  );
 
-  position: absolute;
-  transform: skewX(-45deg);
+div#textWrapper {
+  height: 55;
 }
-div.Mini_showInfo > button:hover {
-  background: #fe6637;
-  color: #fff;
-}
-div.Mini_showInfo > button:hover:before {
-  left: 150px;
-  transition: 0.5s ease-in-out;
-} */
